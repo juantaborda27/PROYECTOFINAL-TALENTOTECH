@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function(){
-    // Initialize Lucide icons
     lucide.createIcons();
 
     const calendar = document.getElementById('calendar');
@@ -99,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function(){
     function openModal(e) {
         const date = e.target.getAttribute('data-date');
         eventDateInput.value = date;
-        startDateInput.value = date; // Set the start date to the clicked date
+        startDateInput.value = date;
         updateEventList(date);
         modal.style.display = 'block';
     }
@@ -165,6 +164,7 @@ document.addEventListener('DOMContentLoaded', function(){
     addEventButton.onclick = function() {
         eventForm.reset();
         eventIdInput.value = '';
+        startDateInput.value = eventDateInput.value;
         eventForm.style.display = 'block';
         addEventButton.style.display = 'none';
         deleteButton.style.display = 'none';
