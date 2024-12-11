@@ -45,8 +45,9 @@ body {
 }
 
 .logo {
-    height: 40px;
+    height: 90px;
     width: auto;
+    margin-bottom: auto;
 }
 
 .nav-link {
