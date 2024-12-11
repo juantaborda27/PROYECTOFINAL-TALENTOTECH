@@ -98,7 +98,7 @@ header {
 /* Habit Grid and Cards */
 .habits-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 2fr));
     gap: 20px;
     margin-top: 20px;
 }
@@ -214,7 +214,7 @@ header {
 
 .modal-content {
     background-color: var(--card-background);
-    margin: 15% auto;
+    margin: 5% auto;
     padding: 20px;
     border-radius: 8px;
     width: 80%;

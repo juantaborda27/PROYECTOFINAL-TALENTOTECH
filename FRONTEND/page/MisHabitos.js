@@ -1,84 +1,55 @@
 document.addEventListener('DOMContentLoaded', function() {
     lucide.createIcons();
 
-    const habitsContainer = document.getElementById('habits-container');
-    const newHabitBtn = document.getElementById('new-habit-btn');
+    const cropsContainer = document.getElementById('habits-container');
+    const newCropBtn = document.getElementById('new-crop-btn');
     const modal = document.getElementById('modal');
-    const habitForm = document.getElementById('habit-form');
-    const cancelHabitBtn = document.getElementById('cancel-habit');
+    const cropForm = document.getElementById('crop-form');
+    const cancelCropBtn = document.getElementById('cancel-crop');
     const confirmDialog = document.getElementById('confirm-dialog');
     const cancelDeleteBtn = document.getElementById('cancel-delete');
     const confirmDeleteBtn = document.getElementById('confirm-delete');
 
-    const categorias = ['Salud', 'Productividad', 'Ejercicio', 'Salud Mental', 'Autocuidado', 'Relaciones Sociales', 'Sueño'];
+    let crops = [];
+    let editingCropId = null;
+    let deletingCropId = null;
 
-    let habits = [];
-    let editingHabitId = null;
-    let deletingHabitId = null;
-
-    function loadHabits() {
-        habits = JSON.parse(localStorage.getItem('habits')) || [];
-        console.log('Hábitos cargados:', habits);
-        renderHabits();
-        scheduleReminders();
-        inicializarContador();
-        populateCategorySelect();
+    function loadCrops() {
+        crops = JSON.parse(localStorage.getItem('crops')) || [];
+        console.log('Cultivos cargados:', crops);
+        renderCrops();
     }
 
-    function saveHabits() {
-        localStorage.setItem('habits', JSON.stringify(habits));
-        console.log('Hábitos guardados:', habits);
-        scheduleReminders();
+    function saveCrops() {
+        localStorage.setItem('crops', JSON.stringify(crops));
+        console.log('Cultivos guardados:', crops);
     }
 
-    function renderHabits() {
-        habitsContainer.innerHTML = '';
-        habits.forEach(habit => {
-            const habitCard = document.createElement('div');
-            habitCard.className = 'habit-card';
-            const progress = (habit.streak / habit.repeatDays) * 100;
-            habitCard.innerHTML = `
-                <h3>${habit.name}</h3>
-                <p>${habit.description}</p>
-                <div class="habit-details">
-                    <span>Categoría: ${habit.category || 'Null'}</span>
-                    <span>Hora: ${habit.time}</span>
-                    <span>Racha: ${habit.streak}/${habit.repeatDays} días</span>
-                    <span>Creado: ${new Date(habit.fechaCreacion).toLocaleDateString('es-ES')}</span>
+    function renderCrops() {
+        cropsContainer.innerHTML = '';
+        crops.forEach(crop => {
+            const cropCard = document.createElement('div');
+            cropCard.className = 'habit-card';
+            cropCard.innerHTML = `
+                <h3>${crop.name}</h3>
+                <p>${crop.description}</p>
+                <div class="crop-details">
+                    <span>Tipo: ${crop.type}</span>
+                    <span>Inicio: ${new Date(crop.startDate).toLocaleDateString('es-ES')}</span>
+                    <span>Fin: ${new Date(crop.endDate).toLocaleDateString('es-ES')}</span>
+                    <span>Hectáreas: ${crop.hectares}</span>
                 </div>
-                <div class="habit-progress">
-                    <div class="habit-progress-bar" style="width: ${progress}%"></div>
-                </div>
-                <div class="habit-actions">
-                    <button class="primary-button complete-habit" data-id="${habit.id}">Completar</button>
-                    <div>
-                        <span class="habit-badge ${habit.completed ? 'habit-badge-earned' : ''}" title="${habit.completed ? 'Hábito completado' : 'Hábito en progreso'}">
-                            ${habit.completed ? '🏆' : '🎯'}
-                        </span>
-                        <button class="icon-button edit-habit"><i data-lucide="edit"></i></button>
-                        <button class="icon-button delete-habit"><i data-lucide="trash-2"></i></button>
-                        ${habit.reminder ? '<button class="icon-button"><i data-lucide="bell"></i></button>' : ''}
-                    </div>
+                <div class="crop-actions">
+                    <button class="icon-button edit-crop"><i data-lucide="edit"></i></button>
+                    <button class="icon-button delete-crop"><i data-lucide="trash-2"></i></button>
                 </div>
             `;
-            habitsContainer.appendChild(habitCard);
+            cropsContainer.appendChild(cropCard);
 
-            habitCard.querySelector('.edit-habit').addEventListener('click', () => editHabit(habit.id));
-            habitCard.querySelector('.delete-habit').addEventListener('click', () => showDeleteConfirmation(habit.id));
-            habitCard.querySelector('.complete-habit').addEventListener('click', () => completeHabit(habit.id));
+            cropCard.querySelector('.edit-crop').addEventListener('click', () => editCrop(crop.id));
+            cropCard.querySelector('.delete-crop').addEventListener('click', () => showDeleteConfirmation(crop.id));
         });
         lucide.createIcons();
-    }
-
-    function populateCategorySelect() {
-        const categorySelect = document.getElementById('habit-category');
-        categorySelect.innerHTML = '<option value="">Selecciona una categoría</option>';
-        categorias.forEach(categoria => {
-            const option = document.createElement('option');
-            option.value = categoria;
-            option.textContent = categoria;
-            categorySelect.appendChild(option);
-        });
     }
 
     function showModal(title) {
@@ -88,8 +59,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function hideModal() {
         modal.style.display = 'none';
-        habitForm.reset();
-        editingHabitId = null;
+        cropForm.reset();
+        editingCropId = null;
     }
 
     function showNotification(message) {
@@ -101,160 +72,74 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
 
-    newHabitBtn.addEventListener('click', () => {
-        showModal('Crear Nuevo Hábito');
-        populateCategorySelect();
+    newCropBtn.addEventListener('click', () => {
+        showModal('Crear Nuevo Cultivo');
     });
 
-    function editHabit(id) {
-        const habit = habits.find(h => h.id === id);
-        if (habit) {
-            document.getElementById('habit-name').value = habit.name;
-            document.getElementById('habit-description').value = habit.description;
-            document.getElementById('habit-frequency').value = habit.frequency;
-            document.getElementById('habit-time').value = habit.time;
-            document.getElementById('habit-repeat-days').value = habit.repeatDays || 1;
-            document.getElementById('habit-reminder').checked = habit.reminder;
-            document.getElementById('habit-category').value = habit.category || '';
-            editingHabitId = id;
-            showModal('Editar Hábito');
+    function editCrop(id) {
+        const crop = crops.find(c => c.id === id);
+        if (crop) {
+            document.getElementById('crop-name').value = crop.name;
+            document.getElementById('crop-description').value = crop.description;
+            document.getElementById('crop-type').value = crop.type;
+            document.getElementById('crop-start-date').value = crop.startDate;
+            document.getElementById('crop-end-date').value = crop.endDate;
+            document.getElementById('crop-fertilizer').value = crop.fertilizer;
+            document.getElementById('crop-hectares').value = crop.hectares;
+            document.getElementById('crop-seedlings').value = crop.seedlings;
+            document.getElementById('crop-harvest').value = crop.harvest;
+            document.getElementById('crop-estimated-production').value = crop.estimatedProduction;
+            editingCropId = id;
+            showModal('Editar Cultivo');
         }
     }
 
     function showDeleteConfirmation(id) {
-        deletingHabitId = id;
+        deletingCropId = id;
         confirmDialog.style.display = 'block';
     }
 
-    function completeHabit(id) {
-        const habitIndex = habits.findIndex(h => h.id === id);
-        if (habitIndex !== -1) {
-            const habit = habits[habitIndex];
-            const today = new Date().toDateString();
-            
-            if (habit.lastCompletedDate === today) {
-                showNotification("Ya has completado este hábito hoy. ¡Vuelve mañana!");
-                return;
-            }
-    
-            let totalHabitosCompletados = parseInt(localStorage.getItem('totalHabitosCompletados') || '0');
-            totalHabitosCompletados++;
-            localStorage.setItem('totalHabitosCompletados', totalHabitosCompletados);
-    
-            habit.streak += 1;
-            habit.progress = Math.min(100, (habit.streak / habit.repeatDays) * 100);
-            habit.lastCompletedDate = today;
-            
-            if (habit.streak >= habit.repeatDays) {
-                habit.completed = true;
-                showNotification(`¡Felicidades! Has completado el hábito "${habit.name}" durante ${habit.repeatDays} días.`);
-            }
-            
-            saveHabits();
-            renderHabits();
-            showNotification(`¡Hábito "${habit.name}" completado! Racha: ${habit.streak}/${habit.repeatDays} días`);
-    
-            const habitoCompletadoEvent = new CustomEvent('habitoCompletado', {
-                detail: { totalCompletados: totalHabitosCompletados }
-            });
-            window.dispatchEvent(habitoCompletadoEvent);
-    
-            const contadorElement = document.getElementById('habits-completed');
-            if (contadorElement) {
-                contadorElement.textContent = totalHabitosCompletados;
-            }
-    
-            console.log('Total hábitos completados:', totalHabitosCompletados);
-            console.log('Elemento en la interfaz:', contadorElement);
-        }
-    }
-    
-    function inicializarContador() {
-        const totalHabitosCompletados = localStorage.getItem('totalHabitosCompletados') || '0';
-        
-        const contadorElement = document.getElementById('habits-completed');
-        if (contadorElement) {
-            contadorElement.textContent = totalHabitosCompletados;
-        }
-    }
-
-    habitForm.addEventListener('submit', function(e) {
+    cropForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const habitData = {
-            name: document.getElementById('habit-name').value,
-            description: document.getElementById('habit-description').value,
-            frequency: document.getElementById('habit-frequency').value,
-            time: document.getElementById('habit-time').value,
-            repeatDays: parseInt(document.getElementById('habit-repeat-days').value),
-            reminder: document.getElementById('habit-reminder').checked,
-            category: document.getElementById('habit-category').value,
-            streak: 0,
-            progress: 0,
-            completed: false,
-            lastCompletedDate: null,
-            fechaCreacion: new Date().toISOString()
+        const cropData = {
+            name: document.getElementById('crop-name').value,
+            description: document.getElementById('crop-description').value,
+            type: document.getElementById('crop-type').value,
+            startDate: document.getElementById('crop-start-date').value,
+            endDate: document.getElementById('crop-end-date').value,
+            fertilizer: parseFloat(document.getElementById('crop-fertilizer').value),
+            hectares: parseFloat(document.getElementById('crop-hectares').value),
+            seedlings: parseInt(document.getElementById('crop-seedlings').value),
+            harvest: parseFloat(document.getElementById('crop-harvest').value),
+            estimatedProduction: parseFloat(document.getElementById('crop-estimated-production').value)
         };
 
-        if (editingHabitId) {
-            habits = habits.map(h => h.id === editingHabitId ? {...h, ...habitData, fechaCreacion: h.fechaCreacion} : h);
+        if (editingCropId) {
+            crops = crops.map(c => c.id === editingCropId ? {...c, ...cropData} : c);
         } else {
-            habitData.id = Date.now();
-            habits.push(habitData);
+            cropData.id = Date.now();
+            crops.push(cropData);
         }
 
-        saveHabits();
-        renderHabits();
+        saveCrops();
+        renderCrops();
         hideModal();
+        showNotification(editingCropId ? 'Cultivo actualizado con éxito' : 'Nuevo cultivo agregado con éxito');
     });
 
-    cancelHabitBtn.addEventListener('click', hideModal);
+    cancelCropBtn.addEventListener('click', hideModal);
 
     confirmDeleteBtn.addEventListener('click', function() {
-        habits = habits.filter(h => h.id !== deletingHabitId);
-        saveHabits();
-        renderHabits();
+        crops = crops.filter(c => c.id !== deletingCropId);
+        saveCrops();
+        renderCrops();
         confirmDialog.style.display = 'none';
+        showNotification('Cultivo eliminado con éxito');
     });
 
     cancelDeleteBtn.addEventListener('click', function() {
         confirmDialog.style.display = 'none';
     });
-
-    function scheduleReminders() {
-        habits.forEach(habit => {
-            if (habit.reminder) {
-                const [hours, minutes] = habit.time.split(':');
-                const now = new Date();
-                const reminderTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
-                
-                if (reminderTime > now) {
-                    const timeUntilReminder = reminderTime - now;
-                    setTimeout(() => {
-                        showReminderNotification(habit);
-                    }, timeUntilReminder);
-                }
-            }
-        });
-    }
-
-    function showReminderNotification(habit) {
-        const notification = document.createElement('div');
-        notification.className = 'reminder-notification';
-        notification.innerHTML = `
-            <h3>¡Recordatorio de hábito!</h3>
-            <p>Es hora de: ${habit.name}</p>
-            <button class="close-notification">Cerrar</button>
-        `;
-        document.body.appendChild(notification);
-
-        notification.querySelector('.close-notification').addEventListener('click', () => {
-            notification.remove();
-        });
-
-        setTimeout(() => {
-            notification.remove();
-        }, 10000);
-    }
 
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.querySelector('.sidebar');
@@ -262,50 +147,17 @@ document.addEventListener('DOMContentLoaded', function() {
         sidebar.classList.toggle('show-sidebar');
     });
 
-    function checkUncompletedHabits() {
-        const today = new Date().toDateString();
-        const uncompletedHabits = habits.filter(habit => 
-            habit.lastCompletedDate !== today && 
-            (habit.frequency === 'daily' || 
-             (habit.frequency === 'weekly' && new Date().getDay() === 0) ||
-             (habit.frequency === 'monthly' && new Date().getDate() === 1))
-        );
-    
-        if (uncompletedHabits.length > 0) {
-            showUncompletedHabitsNotification(uncompletedHabits);
-        }
-    }
-
-    function showUncompletedHabitsNotification(uncompletedHabits) {
-        const message = `No has completado ${uncompletedHabits.length} hábito(s) hoy: ${uncompletedHabits.map(h => h.name).join(', ')}`;
-        showNotification(message, 10000); // Mostrar por 10 segundos
-    }
-
-    function scheduleUncompletedHabitsCheck() {
-        const now = new Date();
-        const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
-        const timeUntilEndOfDay = endOfDay - now;
-    
-        setTimeout(() => {
-            checkUncompletedHabits();
-            // Programar la próxima verificación para el día siguiente
-            scheduleUncompletedHabitsCheck();
-        }, timeUntilEndOfDay);
-    }
-
     function loadProfilePicture() {
         const profilePicture = localStorage.getItem('profilePicture');
         if (profilePicture) {
             document.getElementById('profile-picture').src = profilePicture;
         }
     }
-    
 
-    loadHabits();
-    scheduleUncompletedHabitsCheck();
+    loadCrops();
     loadProfilePicture();
-
 });
 
-// Ejecuta este código en la consola para ver los hábitos actuales
-console.log('Hábitos actuales:', JSON.parse(localStorage.getItem('habits')));
+// Ejecuta este código en la consola para ver los cultivos actuales
+console.log('Cultivos actuales:', JSON.parse(localStorage.getItem('crops')));
+

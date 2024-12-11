@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hábitos</title>
+    <title>Gestión de Cultivos</title>
     <link rel="stylesheet" href="styleshabits.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
@@ -15,15 +15,15 @@
                 <center><img src="../page/img/LOGO.png" alt="" width="60px" height="40px"></center>
             </div>
             <nav>
-                <a href="MisHabitos.html" class="active"><i data-lucide="home" ></i>Gestión Cultivos</a>
+                <a href="MisHabitos.html" class="active"><i data-lucide="sprout"></i>Gestión Cultivos</a>
                 <a href="Sugerencias.html"><i data-lucide="lightbulb"></i>Sugerencias de Cultivos</a>
-                <a href="Calendario.html"><i data-lucide="calendar"></i>Calendario</a>
+                <a href="Calendario.html"><i data-lucide="calendar"></i>Calendario Agrícola</a>
             </nav>
         </aside>
         <main class="main-container">
             <header>
                 <button id="menu-toggle" class="icon-button"><i data-lucide="menu"></i></button>
-                <h2>Mis Hábitos</h2>
+                <h2>Gestión de Cultivos</h2>
                 <div>
                     <a href="PerfilUsuario.html" class="icon-button profile-picture-container">
                         <img id="profile-picture" src="path/to/default-profile-picture.jpg" alt="Foto de perfil" class="profile-picture">
@@ -31,7 +31,7 @@
                 </div>
             </header>
             <div class="content">
-                <button id="new-habit-btn" class="primary-button"><i data-lucide="plus"></i></button>
+                <button id="new-crop-btn" class="primary-button"><i data-lucide="plus"></i></button>
                 <div id="habits-container" class="habits-grid"></div>
             </div>
         </main>
@@ -39,47 +39,56 @@
 
     <div id="modal" class="modal">
         <div class="modal-content">
-            <h2 id="modal-title">Crear Nuevo Hábito</h2>
-            <form id="habit-form">
+            <center><h2 id="modal-title">Crear Nuevo Cultivo</h2></center>
+            <form id="crop-form">
                 <div class="form-group">
-                    <label for="habit-name">Nombre</label>
-                    <input type="text" id="habit-name" required>
+                    <label for="crop-name">Nombre</label>
+                    <input type="text" id="crop-name" required>
                 </div>
                 <div class="form-group">
-                    <label for="habit-description">Descripción</label>
-                    <textarea id="habit-description" required></textarea>
+                    <label for="crop-description">Descripción</label>
+                    <textarea id="crop-description" required></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="habit-frequency">Frecuencia</label>
-                    <select id="habit-frequency" required>
-                        <option value="daily">Diario</option>
-                        <option value="weekly">Semanal</option>
-                        <option value="monthly">Mensual</option>
+                    <label for="crop-type">Tipo</label>
+                    <select id="crop-type" required>
+                        <option value="">Selecciona un tipo</option>
+                        <option value="cereal">Cereal</option>
+                        <option value="legumbre">Legumbre</option>
+                        <option value="fruta">Fruta</option>
+                        <option value="verdura">Verdura</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="habit-time">Hora</label>
-                    <input type="time" id="habit-time" required>
+                    <label for="crop-start-date">Fecha de Inicio</label>
+                    <input type="date" id="crop-start-date" required>
                 </div>
                 <div class="form-group">
-                    <label for="habit-repeat-days">Días de repetición</label>
-                    <input type="number" id="habit-repeat-days" min="1" required>
+                    <label for="crop-end-date">Fecha de Finalización</label>
+                    <input type="date" id="crop-end-date" required>
                 </div>
                 <div class="form-group">
-                    <label for="habit-category">Categoría</label>
-                    <select id="habit-category" required>
-                        <option value="">Selecciona una categoría</option>
-                        <!-- Las opciones se llenarán dinámicamente con JavaScript -->
-                    </select>
+                    <label for="crop-fertilizer">Cantidad de Fertilizante (kg)</label>
+                    <input type="number" id="crop-fertilizer" required>
                 </div>
                 <div class="form-group">
-                    <label for="habit-reminder">
-                        <input type="checkbox" id="habit-reminder">
-                        Recordatorio
-                    </label>
+                    <label for="crop-hectares">Cantidad de Hectáreas</label>
+                    <input type="number" id="crop-hectares" required>
+                </div>
+                <div class="form-group">
+                    <label for="crop-seedlings">Cantidad de Plántulas</label>
+                    <input type="number" id="crop-seedlings" required>
+                </div>
+                <div class="form-group">
+                    <label for="crop-harvest">Cantidad de Cosecha (kg)</label>
+                    <input type="number" id="crop-harvest" required>
+                </div>
+                <div class="form-group">
+                    <label for="crop-estimated-production">Producción Total Estimada (kg)</label>
+                    <input type="number" id="crop-estimated-production" required>
                 </div>
                 <div class="form-actions">
-                    <button type="button" id="cancel-habit">Cancelar</button>
+                    <button type="button" id="cancel-crop">Cancelar</button>
                     <button type="submit" class="primary-button">Guardar</button>
                 </div>
             </form>
@@ -89,7 +98,7 @@
     <div id="confirm-dialog" class="modal">
         <div class="modal-content">
             <h2>¿Estás seguro?</h2>
-            <p>Esta acción no se puede deshacer. Esto eliminará permanentemente tu hábito.</p>
+            <p>Esta acción no se puede deshacer. Esto eliminará permanentemente tu cultivo.</p>
             <div class="form-actions">
                 <button id="cancel-delete" class="secondary-button">Cancelar</button>
                 <button id="confirm-delete" class="danger-button">Eliminar</button>
@@ -97,48 +106,6 @@
         </div>
     </div>
 
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <h2 id="modal-title">Crear Nuevo Hábito</h2>
-        <form id="habit-form">
-            <div class="form-group">
-                <label for="habit-name">Nombre</label>
-                <input type="text" id="habit-name" required>
-            </div>
-            <div class="form-group">
-                <label for="habit-description">Descripción</label>
-                <textarea id="habit-description" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="habit-frequency">Frecuencia</label>
-                <select id="habit-frequency" required>
-                    <option value="daily">Diario</option>
-                    <option value="weekly">Semanal</option>
-                    <option value="monthly">Mensual</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="habit-time">Hora</label>
-                <input type="time" id="habit-time" required>
-            </div>
-            <div class="form-group">
-                <label for="habit-deadline">Fecha límite</label>
-                <input type="date" id="habit-deadline" required>
-            </div>
-            <div class="form-group">
-                <label for="habit-reminder">
-                    <input type="checkbox" id="habit-reminder">
-                    Recordatorio
-                </label>
-            </div>
-            <div class="form-actions">
-                <button type="button" id="cancel-habit">Cancelar</button>
-                <button type="submit" class="primary-button">Guardar</button>
-            </div>
-        </form>
-    </div>
-</div>
-    <!-- Añadido el elemento de notificación -->
     <div id="notification" class="notification" style="display: none;"></div>
     <div id="notification-container"></div>
 
