@@ -41,21 +41,31 @@ document.addEventListener('DOMContentLoaded', function() {
             const progress = calculateProgress(crop.startDate, crop.endDate);
             const cropCard = document.createElement('div');
             cropCard.className = 'habit-card';
+            
+            let progressColor;
+            if (progress === 100) {
+                progressColor = '#2ecc71'; // Green for 100% completion
+            } else if (progress >= 50) {
+                progressColor = '#f39c12'; // Orange for 50% or more
+            } else {
+                progressColor = '#3498db'; // Blue for less than 50%
+            }
+            
             cropCard.innerHTML = `
-                <h3>${crop.name}</h3>
+            <center><h3>${crop.name}</h3></center>
                 <p>${crop.description}</p>
                 <div class="crop-details">
-                    <span>Tipo: ${crop.type}</span>
-                    <span>Inicio: ${new Date(crop.startDate).toLocaleDateString('es-ES')}</span>
-                    <span>Fin: ${new Date(crop.endDate).toLocaleDateString('es-ES')}</span>
-                    <span>Fertilizante: ${crop.fertilizer} kg</span>
-                    <span>Hectáreas: ${crop.hectares}</span>
-                    <span>Plántulas: ${crop.seedlings}</span>
+                    <span>Tipo: ${crop.type}</span><br>
+                    <span>Inicio: ${new Date(crop.startDate).toLocaleDateString('es-ES')}</span><br>
+                    <span>Fin: ${new Date(crop.endDate).toLocaleDateString('es-ES')}</span><br>
+                    <span>Fertilizante: ${crop.fertilizer} kg</span><br>
+                    <span>Hectáreas: ${crop.hectares}</span><br>
+                    <span>Plántulas: ${crop.seedlings}</span><br>
                     <span>Cosecha: ${crop.harvest} kg</span>
                     <span>Producción estimada: ${crop.estimatedProduction} kg</span>
                 </div>
                 <div class="progress-bar">
-                    <div class="progress" style="width: ${progress}%"></div>
+                    <div class="progress" style="width: ${progress}%; background-color: ${progressColor};"></div>
                 </div>
                 <p class="progress-text">${progress}% completado</p>
                 <div class="crop-actions">
