@@ -9,13 +9,17 @@ document.addEventListener('DOMContentLoaded', function(){
     const eventList = document.getElementById('eventList');
     const addEventButton = document.getElementById('addEventButton');
     const eventDateInput = document.getElementById('eventDate');
-    const eventTitleInput = document.getElementById('eventTitle');
+    const cropNameInput = document.getElementById('cropName');
     const eventIdInput = document.getElementById('eventId');
-    const eventDescriptionInput = document.getElementById('eventDescription');
-    const eventTimeInput = document.getElementById('eventTime');
-    const eventFrequencyInput = document.getElementById('eventFrequency');
-    const eventReminderInput = document.getElementById('eventReminder');
-    const eventRepeatDaysInput = document.getElementById('eventRepeatDays');
+    const cropDescriptionInput = document.getElementById('cropDescription');
+    const cropTypeInput = document.getElementById('cropType');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+    const fertilizerInput = document.getElementById('fertilizer');
+    const hectaresInput = document.getElementById('hectares');
+    const seedlingsInput = document.getElementById('seedlings');
+    const harvestInput = document.getElementById('harvest');
+    const estimatedProductionInput = document.getElementById('estimatedProduction');
     const saveButton = document.getElementById('saveButton');
     const deleteButton = document.getElementById('deleteButton');
     const prevMonthBtn = document.getElementById('prevMonth');
@@ -96,6 +100,7 @@ document.addEventListener('DOMContentLoaded', function(){
     function openModal(e) {
         const date = e.target.getAttribute('data-date');
         eventDateInput.value = date;
+        startDateInput.value = date; // Set the start date to the clicked date
         updateEventList(date);
         modal.style.display = 'block';
     }
@@ -106,12 +111,12 @@ document.addEventListener('DOMContentLoaded', function(){
             events[date].forEach((event, index) => {
                 const eventItem = document.createElement('div');
                 eventItem.className = 'event-item';
-                eventItem.textContent = event.title;
+                eventItem.textContent = event.name;
                 eventItem.addEventListener('click', () => editEvent(date, index));
                 eventList.appendChild(eventItem);
             });
         } else {
-            eventList.innerHTML = '<p>No hay eventos para este día.</p>';
+            eventList.innerHTML = '<p>No hay cultivos para este día.</p>';
         }
         eventForm.style.display = 'none';
         addEventButton.style.display = 'block';
@@ -120,26 +125,27 @@ document.addEventListener('DOMContentLoaded', function(){
     function editEvent(date, index) {
         const event = events[date][index];
         eventIdInput.value = index;
-        eventTitleInput.value = event.title;
-        eventDescriptionInput.value = event.description || '';
-        eventTimeInput.value = event.time || '';
-        eventFrequencyInput.value = event.frequency || 'once';
-        eventReminderInput.checked = event.reminder || false;
-        eventRepeatDaysInput.value = event.repeatDays || 1;
+        cropNameInput.value = event.name;
+        cropDescriptionInput.value = event.description || '';
+        cropTypeInput.value = event.type || '';
+        startDateInput.value = event.startDate || '';
+        endDateInput.value = event.endDate || '';
+        fertilizerInput.value = event.fertilizer || '';
+        hectaresInput.value = event.hectares || '';
+        seedlingsInput.value = event.seedlings || '';
+        harvestInput.value = event.harvest || '';
+        estimatedProductionInput.value = event.estimatedProduction || '';
         eventForm.style.display = 'block';
         addEventButton.style.display = 'none';
         deleteButton.style.display = 'block';
     }
 
-    function saveEvent(date, title, description, time, frequency, reminder) {
+    function saveCrop(date, cropData) {
         if (!events[date]) {
             events[date] = [];
         }
-        const newEvent = { title, description, time, frequency, reminder };
-        events[date].push(newEvent);
+        events[date].push(cropData);
         localStorage.setItem('calendarEvents', JSON.stringify(events));
-        // Agregar el evento como un hábito en MisHabitos
-        addEventToHabits(newEvent);
         updateCalendar();
         updateEventList(date);
     }
@@ -161,6 +167,26 @@ document.addEventListener('DOMContentLoaded', function(){
         };
         habits.push(newHabit);
         localStorage.setItem('habits', JSON.stringify(habits));
+    }
+
+    function addCropFromCalendar(event) {
+        let crops = JSON.parse(localStorage.getItem('crops')) || [];
+        const newCrop = {
+            id: Date.now(),
+            name: event.title,
+            description: event.description,
+            type: 'Otro', // Default type, can be changed later
+            startDate: event.date,
+            endDate: '', // Can be set later
+            fertilizer: 0,
+            hectares: 0,
+            seedlings: 0,
+            harvest: 0,
+            estimatedProduction: 0
+        };
+        crops.push(newCrop);
+        localStorage.setItem('crops', JSON.stringify(crops));
+        console.log('Nuevo cultivo añadido:', newCrop);
     }
 
     function syncCalendarWithHabits() {
@@ -229,23 +255,31 @@ document.addEventListener('DOMContentLoaded', function(){
     saveButton.addEventListener('click', function(e) {
         e.preventDefault();
         const date = eventDateInput.value;
-        const title = eventTitleInput.value;
-        const description = eventDescriptionInput.value;
-        const time = eventTimeInput.value;
-        const frequency = eventFrequencyInput.value;
-        const reminder = eventReminderInput.checked;
+        const cropData = {
+            name: cropNameInput.value,
+            description: cropDescriptionInput.value,
+            type: cropTypeInput.value,
+            startDate: startDateInput.value,
+            endDate: endDateInput.value,
+            fertilizer: parseFloat(fertilizerInput.value),
+            hectares: parseFloat(hectaresInput.value),
+            seedlings: parseInt(seedlingsInput.value),
+            harvest: parseFloat(harvestInput.value),
+            estimatedProduction: parseFloat(estimatedProductionInput.value)
+        };
+
         const id = eventIdInput.value;
         if (id === '') {
-            saveEvent(date, title, description, time, frequency, reminder);
+            saveCrop(date, cropData);
         } else {
-            // Actualizar evento existente
-            events[date][parseInt(id)] = { title, description, time, frequency, reminder };
+            // Update existing crop
+            events[date][parseInt(id)] = cropData;
             localStorage.setItem('calendarEvents', JSON.stringify(events));
             updateCalendar();
             updateEventList(date);
         }
         modal.style.display = 'none';
-        console.log('Evento guardado:', { title, description, time, frequency, reminder });
+        console.log('Cultivo guardado:', cropData);
     });
 
     deleteButton.onclick = function() {
@@ -258,7 +292,6 @@ document.addEventListener('DOMContentLoaded', function(){
         localStorage.setItem('calendarEvents', JSON.stringify(events));
         updateCalendar();
         updateEventList(date);
-        syncCalendarWithHabits();
         modal.style.display = 'none';
     }
 
@@ -273,16 +306,12 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
     createCalendar();
-    syncCalendarWithHabits();
-
 
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.querySelector('.sidebar');
     menuToggle.addEventListener('click', function() {
         sidebar.classList.toggle('show-sidebar');
     });
-
-    
 
     function loadProfilePicture() {
         const profilePicture = localStorage.getItem('profilePicture');
@@ -296,3 +325,4 @@ document.addEventListener('DOMContentLoaded', function(){
 
     loadProfilePicture();
 });
+

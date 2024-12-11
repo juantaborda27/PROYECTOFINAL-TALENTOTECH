@@ -36,13 +36,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p>${crop.description}</p>
                 <div class="crop-details">
                     <span>Tipo: ${crop.type}</span>
+                    <br>
                     <span>Inicio: ${new Date(crop.startDate).toLocaleDateString('es-ES')}</span><br>
+                    <br>
                     <span>Fin: ${new Date(crop.endDate).toLocaleDateString('es-ES')}</span><br>
                     <span>Fertilizante: ${crop.fertilizer} kg</span><br>
+                    <br>
                     <span>Hectáreas: ${crop.hectares}</span><br>
+                    <br>
                     <span>Plántulas: ${crop.seedlings}</span><br>
+                    <br>
                     <span>Cosecha: ${crop.harvest} kg</span>
+                    <br>
                     <span>Producción estimada: ${crop.estimatedProduction} kg</span>
+                    <br>
                 </div>
                 <div class="crop-actions">
                     <button class="icon-button edit-crop"><i data-lucide="edit"></i></button>
