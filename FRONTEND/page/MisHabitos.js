@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         crops = JSON.parse(localStorage.getItem('crops')) || [];
         console.log('Cultivos cargados:', crops);
         renderCrops();
+        checkForSuggestedCrops(); // Add this line
     }
 
     function saveCrops() {
@@ -35,9 +36,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p>${crop.description}</p>
                 <div class="crop-details">
                     <span>Tipo: ${crop.type}</span>
-                    <span>Inicio: ${new Date(crop.startDate).toLocaleDateString('es-ES')}</span>
-                    <span>Fin: ${new Date(crop.endDate).toLocaleDateString('es-ES')}</span>
-                    <span>Hectáreas: ${crop.hectares}</span>
+                    <span>Inicio: ${new Date(crop.startDate).toLocaleDateString('es-ES')}</span><br>
+                    <span>Fin: ${new Date(crop.endDate).toLocaleDateString('es-ES')}</span><br>
+                    <span>Fertilizante: ${crop.fertilizer} kg</span><br>
+                    <span>Hectáreas: ${crop.hectares}</span><br>
+                    <span>Plántulas: ${crop.seedlings}</span><br>
+                    <span>Cosecha: ${crop.harvest} kg</span>
+                    <span>Producción estimada: ${crop.estimatedProduction} kg</span>
                 </div>
                 <div class="crop-actions">
                     <button class="icon-button edit-crop"><i data-lucide="edit"></i></button>
@@ -151,6 +156,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const profilePicture = localStorage.getItem('profilePicture');
         if (profilePicture) {
             document.getElementById('profile-picture').src = profilePicture;
+        }
+    }
+
+    function checkForSuggestedCrops() {
+        const suggestedCrops = JSON.parse(localStorage.getItem('habits')) || [];
+        if (suggestedCrops.length > 0) {
+            crops = [...crops, ...suggestedCrops];
+            localStorage.setItem('crops', JSON.stringify(crops));
+            localStorage.removeItem('habits');
+            renderCrops();
+            showNotification(`Se han añadido ${suggestedCrops.length} cultivos sugeridos`);
         }
     }
 

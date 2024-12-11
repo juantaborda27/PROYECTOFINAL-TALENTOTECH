@@ -2,37 +2,152 @@ document.addEventListener('DOMContentLoaded', function() {
     lucide.createIcons();
 
     const suggestionHabits = [
-        { name: "Beber agua", description: "Beber 8 vasos de agua al día", time: "08:00", frequency: "daily", reminder: true, category: "Salud", fechaCreacion: new Date().toISOString()},
-        { name: "Leer", description: "Leer 30 minutos al día", time: "21:00", frequency: "daily", reminder: true, category: "Productividad", fechaCreacion: new Date().toISOString()},
-        { name: "Caminar", description: "Caminar 30 minutos al aire libre", time: "18:00", frequency: "daily", reminder: true, category: "Ejercicio", fechaCreacion: new Date().toISOString()},
-        { name: "Practicar gratitud", description: "Escribir 3 cosas por las que estás agradecido", time: "22:00", frequency: "daily", reminder: true, category: "Salud mental", fechaCreacion: new Date().toISOString()},
-        { name: "Meditar", description: "Meditar durante 10 minutos", time: "07:00", frequency: "daily", reminder: true, category: "Salud mental", fechaCreacion: new Date().toISOString()},
-        { name: "Ejercicio", description: "Hacer 30 minutos de ejercicio", time: "06:30", frequency: "daily", reminder: true, category: "Ejercicio", fechaCreacion: new Date().toISOString()},
-        { name: "Leer", description: "Leer 20 páginas de un libro", time: "20:00", frequency: "daily", reminder: true, category: "Productividad", fechaCreacion: new Date().toISOString()},
-        { name: "Beber Agua", description: "Beber 8 vasos de agua", time: "08:00", frequency: "daily", reminder: true, category: "Salud", fechaCreacion: new Date().toISOString()},
-        { name: "Planificar el Día", description: "Revisar la lista de tareas del día", time: "08:30", frequency: "daily", reminder: true, category: "Productividad", fechaCreacion: new Date().toISOString()},
-        { name: "Escribir en Diario", description: "Escribir reflexiones diarias", time: "21:00", frequency: "daily", reminder: true, category: "Salud mental", fechaCreacion: new Date().toISOString()},
-        { name: "Estudiar Idioma", description: "Practicar inglés durante 15 minutos", time: "19:00", frequency: "daily", reminder: true, category: "Productividad", fechaCreacion: new Date().toISOString()},
-        { name: "Agradecer", description: "Escribir 3 cosas por las que estoy agradecido", time: "22:00", frequency: "daily", reminder: true, category: "Salud mental", fechaCreacion: new Date().toISOString()},
-        { name: "Aprender", description: "Ver un video educativo", time: "12:00", frequency: "daily", reminder: true, category: "Productividad", fechaCreacion: new Date().toISOString() },
-        { name: "Dormir Bien", description: "Acostarse temprano para dormir 8 horas", time: "22:30", frequency: "daily", reminder: true, category: "Sueño", fechaCreacion: new Date().toISOString()},
-        { name: "Organizar Espacio", description: "Ordenar el escritorio al final del día", time: "18:00", frequency: "daily", reminder: true, category: "Autocuidado", fechaCreacion: new Date().toISOString()},
-        { name: "Hacer Yoga", description: "Realizar 20 minutos de yoga", time: "06:00", frequency: "daily", reminder: true, category: "Ejercicio", fechaCreacion: new Date().toISOString() },
-        { name: "Cuidar Plantas", description: "Regar y cuidar las plantas", time: "09:00", frequency: "daily", reminder: true, category: "Autocuidado", fechaCreacion: new Date().toISOString() },
-        { name: "Estudiar Programación", description: "Practicar algoritmos durante 1 hora", time: "16:00", frequency: "daily", reminder: true, category: "Educación", fechaCreacion: new Date().toISOString() },
-        { name: "Cocinar Saludable", description: "Preparar una comida balanceada", time: "13:00", frequency: "daily", reminder: true, category: "Salud", fechaCreacion: new Date().toISOString() },
-        { name: "Practicar Instrumento", description: "Tocar un instrumento musical durante 30 minutos", time: "17:30", frequency: "daily", reminder: true, category: "Creatividad", fechaCreacion: new Date().toISOString() },
-        { name: "Aprender algo nuevo", description: "Investigar un tema desconocido", time: "14:00", frequency: "daily", reminder: true, category: "Educación", fechaCreacion: new Date().toISOString() },
-        { name: "Practicar Respeto", description: "Dar un elogio sincero a alguien", time: "12:30", frequency: "daily", reminder: true, category: "Relaciones", fechaCreacion: new Date().toISOString() },
-        { name: "Evitar Redes Sociales", description: "Estar 1 hora sin redes sociales", time: "19:30", frequency: "daily", reminder: true, category: "Productividad", fechaCreacion: new Date().toISOString() },
-        { name: "Practicar Mindfulness", description: "Conciencia plena durante 10 minutos", time: "08:15", frequency: "daily", reminder: true, category: "Salud mental", fechaCreacion: new Date().toISOString() },
-        { name: "Limpiar", description: "Hacer una limpieza rápida del hogar", time: "20:30", frequency: "daily", reminder: true, category: "Autocuidado", fechaCreacion: new Date().toISOString() },
-        { name: "Técnica Pomodoro", description: "Usar la técnica Pomodoro durante el trabajo", time: "10:00", frequency: "daily", reminder: true, category: "Productividad", fechaCreacion: new Date().toISOString() },
-        { name: "Caminar descalzo", description: "Caminar descalzo para estimular los pies", time: "07:30", frequency: "daily", reminder: true, category: "Salud", fechaCreacion: new Date().toISOString() },
-        { name: "Agradecer al final del día", description: "Reflexionar sobre las cosas positivas del día", time: "23:00", frequency: "daily", reminder: true, category: "Salud mental", fechaCreacion: new Date().toISOString() },
-        { name: "Revisar Finanzas", description: "Checar ingresos y gastos diarios", time: "21:30", frequency: "daily", reminder: true, category: "Finanzas", fechaCreacion: new Date().toISOString() },
-        { name: "Escuchar Música", description: "Escuchar música relajante durante 15 minutos", time: "18:45", frequency: "daily", reminder: true, category: "Relajación", fechaCreacion: new Date().toISOString() }
+        { 
+            name: "Maíz", 
+            description: "Cereal básico para alimentación", 
+            type: "Cereales",
+            startDate: new Date().toISOString().split('T')[0],
+            endDate: new Date(new Date().setMonth(new Date().getMonth() + 5)).toISOString().split('T')[0],
+            fertilizer: 200,
+            hectares: 10,
+            seedlings: 50000,
+            harvest: 80000,
+            estimatedProduction: 100000
+        },
+        { 
+            name: "Tomate", 
+            description: "Hortaliza versátil y nutritiva", 
+            type: "Hortalizas",
+            startDate: new Date().toISOString().split('T')[0],
+            endDate: new Date(new Date().setMonth(new Date().getMonth() + 4)).toISOString().split('T')[0],
+            fertilizer: 150,
+            hectares: 5,
+            seedlings: 20000,
+            harvest: 60000,
+            estimatedProduction: 75000
+        },
+        {
+            name: "Arroz",
+            description: "Principal alimento en muchas culturas",
+            type: "Cereales",
+            startDate: new Date().toISOString().split('T')[0],
+            endDate: new Date(new Date().setMonth(new Date().getMonth() + 6)).toISOString().split('T')[0],
+            fertilizer: 250,
+            hectares: 15,
+            seedlings: 80000,
+            harvest: 100000,
+            estimatedProduction: 120000
+        },
+        {
+            name: "Papa",
+            description: "Tubérculo nutritivo y versátil",
+            type: "Tubérculos",
+            startDate: new Date().toISOString().split('T')[0],
+            endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString().split('T')[0],
+            fertilizer: 180,
+            hectares: 8,
+            seedlings: 30000,
+            harvest: 50000,
+            estimatedProduction: 60000
+        },
+        {
+            name: "Caña de Azúcar",
+            description: "Fuente principal de azúcar y derivados",
+            type: "Cereales",
+            startDate: new Date().toISOString().split('T')[0],
+            endDate: new Date(new Date().setMonth(new Date().getMonth() + 10)).toISOString().split('T')[0],
+            fertilizer: 300,
+            hectares: 20,
+            seedlings: 100000,
+            harvest: 150000,
+            estimatedProduction: 200000
+        },
+        {
+            name: "Café",
+            description: "Grano esencial para bebidas estimulantes",
+            type: "Frutales",
+            startDate: new Date().toISOString().split('T')[0],
+            endDate: new Date(new Date().setMonth(new Date().getMonth() + 12)).toISOString().split('T')[0],
+            fertilizer: 100,
+            hectares: 7,
+            seedlings: 15000,
+            harvest: 20000,
+            estimatedProduction: 30000
+        },
+        {
+            name: "Frijol",
+            description: "Leguminosa rica en proteínas",
+            type: "Legumbres",
+            startDate: new Date().toISOString().split('T')[0],
+            endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString().split('T')[0],
+            fertilizer: 120,
+            hectares: 6,
+            seedlings: 25000,
+            harvest: 40000,
+            estimatedProduction: 50000
+        },
+        {
+            name: "Banano",
+            description: "Fruta tropical de alto consumo",
+            type: "Frutales",
+            startDate: new Date().toISOString().split('T')[0],
+            endDate: new Date(new Date().setMonth(new Date().getMonth() + 9)).toISOString().split('T')[0],
+            fertilizer: 250,
+            hectares: 12,
+            seedlings: 40000,
+            harvest: 80000,
+            estimatedProduction: 100000
+        },
+        {
+            name: "Manzana",
+            description: "Fruta ideal para climas templados",
+            type: "Frutales",
+            startDate: new Date().toISOString().split('T')[0],
+            endDate: new Date(new Date().setMonth(new Date().getMonth() + 11)).toISOString().split('T')[0],
+            fertilizer: 200,
+            hectares: 10,
+            seedlings: 30000,
+            harvest: 60000,
+            estimatedProduction: 75000
+        },
+        {
+            name: "Zanahoria",
+            description: "Hortaliza rica en vitamina A",
+            type: "Hortalizas",
+            startDate: new Date().toISOString().split('T')[0],
+            endDate: new Date(new Date().setMonth(new Date().getMonth() + 2)).toISOString().split('T')[0],
+            fertilizer: 100,
+            hectares: 4,
+            seedlings: 15000,
+            harvest: 30000,
+            estimatedProduction: 35000
+        },
+        {
+            name: "Cebolla",
+            description: "Base esencial para muchas recetas",
+            type: "Hortalizas",
+            startDate: new Date().toISOString().split('T')[0],
+            endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)).toISOString().split('T')[0],
+            fertilizer: 140,
+            hectares: 6,
+            seedlings: 18000,
+            harvest: 35000,
+            estimatedProduction: 40000
+        },
+        {
+            name: "Trigo",
+            description: "Cereal clave para panificación",
+            type: "Cereales",
+            startDate: new Date().toISOString().split('T')[0],
+            endDate: new Date(new Date().setMonth(new Date().getMonth() + 7)).toISOString().split('T')[0],
+            fertilizer: 220,
+            hectares: 18,
+            seedlings: 60000,
+            harvest: 90000,
+            estimatedProduction: 110000
+        }
     ];
+    
 
     let currentFilter = 'Todas';
 
@@ -42,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const filteredHabits = filter === 'Todas' 
             ? suggestionHabits 
-            : suggestionHabits.filter(habit => habit.category === filter);
+            : suggestionHabits.filter(habit => habit.type === filter);
 
         filteredHabits.forEach((habit, index) => {
             const card = document.createElement('div');
@@ -51,13 +166,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 <h3>${habit.name}</h3>
                 <p>${habit.description}</p>
                 <div class="suggestion-details">
-                    <p><i data-lucide="clock"></i> Hora: ${habit.time}</p>
-                    <p><i data-lucide="repeat"></i> Frecuencia: ${habit.frequency}</p>
-                    <p><i data-lucide="tag"></i> Categoría: ${habit.category}</p>
-                    <p><i data-lucide="calendar"></i> Fecha Creación: ${new Date(habit.fechaCreacion).toLocaleDateString()}</p>
+                    <p><i data-lucide="tag"></i> Tipo: ${habit.type}</p>
+                    <p><i data-lucide="calendar"></i> Inicio: ${habit.startDate}</p>
+                    <p><i data-lucide="calendar"></i> Fin: ${habit.endDate}</p>
+                    <p><i data-lucide="droplets"></i> Fertilizante: ${habit.fertilizer} kg</p>
+                    <p><i data-lucide="maximize"></i> Hectáreas: ${habit.hectares}</p>
+                    <p><i data-lucide="seed"></i> Plántulas: ${habit.seedlings}</p>
+                    <p><i data-lucide="leaf"></i> Cosecha: ${habit.harvest} kg</p>
+                    <p><i data-lucide="trending-up"></i> Producción estimada: ${habit.estimatedProduction} kg</p>
                 </div>
                 <button class="add-suggestion-btn" data-index="${index}">
-                    <i data-lucide="plus-circle"></i> Agregar Hábito
+                    <i data-lucide="plus-circle"></i> Agregar Cultivo
                 </button>
             `;
             suggestionsGrid.appendChild(card);
@@ -76,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         addHabitToStorage(habit);
         
-        showNotification(`Hábito "${habit.name}" añadido con éxito`);
+        showNotification(`Cultivo "${habit.name}" añadido con éxito`);
         
         suggestionHabits.splice(index, 1);
         renderSuggestions(currentFilter);
@@ -88,13 +207,14 @@ document.addEventListener('DOMContentLoaded', function() {
             id: Date.now(),
             name: habit.name,
             description: habit.description,
-            time: habit.time,
-            frequency: habit.frequency,
-            reminder: habit.reminder,
-            streak: 0,
-            progress: 0,
-            category: habit.category,
-            fechaCreacion: new Date().toISOString()
+            type: habit.type,
+            startDate: habit.startDate,
+            endDate: habit.endDate,
+            fertilizer: habit.fertilizer,
+            hectares: habit.hectares,
+            seedlings: habit.seedlings,
+            harvest: habit.harvest,
+            estimatedProduction: habit.estimatedProduction
         };
         habits.push(newHabit);
         localStorage.setItem('habits', JSON.stringify(habits));
@@ -111,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupCategoryFilters() {
-        const categories = ['Todas', 'Salud', 'Productividad', 'Ejercicio', 'Salud mental', 'Autocuidado', 'Relaciones sociales', 'Sueño'];
+        const categories = ['Todas', 'Cereales', 'Hortalizas', 'Legumbres', 'Tubérculos'];
         const filterContainer = document.getElementById('category-filters');
 
         categories.forEach(category => {
@@ -151,3 +271,4 @@ document.addEventListener('DOMContentLoaded', function() {
     setupCategoryFilters();
     renderSuggestions();
 });
+
