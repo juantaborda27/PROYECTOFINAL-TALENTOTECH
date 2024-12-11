@@ -35,10 +35,19 @@ document.addEventListener('DOMContentLoaded', function() {
         return Math.min(Math.max(Math.round((daysElapsed / totalDays) * 100), 0), 100);
     }
 
+    function calculateCropCycles(startDate, endDate) {
+         const start = new Date(startDate);
+         const today = new Date();
+         const cycleDuration = (new Date(endDate) - start) / (1000 * 60 * 60 * 24);
+         const daysSinceStart = (today - start) / (1000 * 60 * 60 * 24);
+        return Math.floor(daysSinceStart / cycleDuration);
+    }
+
     function renderCrops() {
         cropsContainer.innerHTML = '';
         crops.forEach(crop => {
             const progress = calculateProgress(crop.startDate, crop.endDate);
+            const cycles = calculateCropCycles(crop.startDate, crop.endDate);
             const cropCard = document.createElement('div');
             cropCard.className = 'habit-card';
             
@@ -52,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             cropCard.innerHTML = `
-            <center><h3>${crop.name}</h3></center>
+                <h3>${crop.name}</h3>
                 <p>${crop.description}</p>
                 <div class="crop-details">
                     <span>Tipo: ${crop.type}</span><br>
@@ -61,8 +70,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     <span>Fertilizante: ${crop.fertilizer} kg</span><br>
                     <span>Hectáreas: ${crop.hectares}</span><br>
                     <span>Plántulas: ${crop.seedlings}</span><br>
-                    <span>Cosecha: ${crop.harvest} kg</span>
-                    <span>Producción estimada: ${crop.estimatedProduction} kg</span>
+                    <span>Cosecha: ${crop.harvest} kg</span><br>
+                    <span>Producción estimada: ${crop.estimatedProduction} kg</span><br>
+                    <span>Ciclos completados: ${cycles}</span>
                 </div>
                 <div class="progress-bar">
                     <div class="progress" style="width: ${progress}%; background-color: ${progressColor};"></div>
