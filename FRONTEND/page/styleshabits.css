@@ -12,6 +12,10 @@
     --border-color: #729762;
 }
 
+.main-container h2{
+    font-size: 40px;
+}
+
 body {
     font-family: 'Montserrat', sans-serif;
     margin: 0;
@@ -64,6 +68,10 @@ h2 {
     color: var(--text-color);
     border-radius: 5px;
     transition: background-color 0.3s;
+}
+
+.sidebar a{
+    font-size: 22px;
 }
 
 .sidebar nav a:hover,

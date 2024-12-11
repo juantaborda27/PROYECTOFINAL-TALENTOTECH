@@ -12,6 +12,14 @@
     --border-color: #729762;
 }
 
+.main-container h2{
+    font-size: 40px;
+}
+
+.sidebar a{
+    font-size: 22px;
+}
+
 body {
     font-family: 'Montserrat', sans-serif;
     margin: 0;
