@@ -74,7 +74,6 @@ document.addEventListener('DOMContentLoaded', function(){
         }
 
         updateCalendar();
-        syncCalendarWithHabits();
     }
 
     function updateCalendar() {
@@ -138,6 +137,9 @@ document.addEventListener('DOMContentLoaded', function(){
         eventForm.style.display = 'block';
         addEventButton.style.display = 'none';
         deleteButton.style.display = 'block';
+
+        // Guardar el ID del cultivo para actualizarlo más tarde
+        eventForm.setAttribute('data-crop-id', event.id);
     }
 
     function saveCrop(date, cropData) {
@@ -146,87 +148,17 @@ document.addEventListener('DOMContentLoaded', function(){
         }
         events[date].push(cropData);
         localStorage.setItem('calendarEvents', JSON.stringify(events));
+
+        // Guardar el cultivo en el almacenamiento de 'crops'
+        let crops = JSON.parse(localStorage.getItem('crops')) || [];
+        crops.push({
+            id: Date.now(),
+            ...cropData
+        });
+        localStorage.setItem('crops', JSON.stringify(crops));
+
         updateCalendar();
         updateEventList(date);
-    }
-
-    function addEventToHabits(event) {
-        let habits = JSON.parse(localStorage.getItem('habits')) || [];
-        const newHabit = {
-            id: Date.now(),
-            name: event.title,
-            description: event.description,
-            time: event.time,
-            frequency: event.frequency,
-            reminder: event.reminder,
-            streak: 0,
-            progress: 0,
-            completed: false,
-            lastCompletedDate: null,
-            fechaCreacion: new Date().toISOString()
-        };
-        habits.push(newHabit);
-        localStorage.setItem('habits', JSON.stringify(habits));
-    }
-
-    function addCropFromCalendar(event) {
-        let crops = JSON.parse(localStorage.getItem('crops')) || [];
-        const newCrop = {
-            id: Date.now(),
-            name: event.title,
-            description: event.description,
-            type: 'Otro', // Default type, can be changed later
-            startDate: event.date,
-            endDate: '', // Can be set later
-            fertilizer: 0,
-            hectares: 0,
-            seedlings: 0,
-            harvest: 0,
-            estimatedProduction: 0
-        };
-        crops.push(newCrop);
-        localStorage.setItem('crops', JSON.stringify(crops));
-        console.log('Nuevo cultivo añadido:', newCrop);
-    }
-
-    function syncCalendarWithHabits() {
-        let habits = JSON.parse(localStorage.getItem('habits')) || [];
-        const calendarEvents = JSON.parse(localStorage.getItem('calendarEvents')) || {};
-
-        // Crear un mapa de hábitos existentes por nombre para una búsqueda rápida
-        const habitMap = new Map(habits.map(habit => [habit.name, habit]));
-
-        // Iterar sobre todos los eventos del calendario
-        Object.entries(calendarEvents).forEach(([date, dateEvents]) => {
-            dateEvents.forEach(event => {
-                if (!habitMap.has(event.title)) {
-                    // Si el hábito no existe, créalo
-                    const newHabit = {
-                        id: Date.now() + Math.random(), // Asegura un ID único
-                        name: event.title,
-                        description: event.description,
-                        time: event.time,
-                        frequency: event.frequency,
-                        reminder: event.reminder,
-                        repeatDays: event.repeatDays,
-                        streak: 0,
-                        progress: 0,
-                        completed: false,
-                        lastCompletedDate: null,
-                        fechaCreacion: new Date().toISOString()
-                    };
-                    habits.push(newHabit);
-                    habitMap.set(event.title, newHabit);
-                }
-            });
-        });
-
-        // Guardar los hábitos actualizados
-        localStorage.setItem('habits', JSON.stringify(habits));
-        console.log('Hábitos sincronizados:', habits);
-
-        // Actualizar la interfaz de usuario de "Mis Hábitos"
-        // updateHabitsUI(habits);
     }
 
 
@@ -256,6 +188,7 @@ document.addEventListener('DOMContentLoaded', function(){
         e.preventDefault();
         const date = eventDateInput.value;
         const cropData = {
+            id: eventForm.getAttribute('data-crop-id') || Date.now(),
             name: cropNameInput.value,
             description: cropDescriptionInput.value,
             type: cropTypeInput.value,
@@ -275,6 +208,17 @@ document.addEventListener('DOMContentLoaded', function(){
             // Update existing crop
             events[date][parseInt(id)] = cropData;
             localStorage.setItem('calendarEvents', JSON.stringify(events));
+
+            // Update crop in 'crops' storage
+            let crops = JSON.parse(localStorage.getItem('crops')) || [];
+            const cropIndex = crops.findIndex(crop => crop.id === cropData.id);
+            if (cropIndex !== -1) {
+                crops[cropIndex] = cropData;
+            } else {
+                crops.push(cropData);
+            }
+            localStorage.setItem('crops', JSON.stringify(crops));
+
             updateCalendar();
             updateEventList(date);
         }
@@ -285,11 +229,18 @@ document.addEventListener('DOMContentLoaded', function(){
     deleteButton.onclick = function() {
         const date = eventDateInput.value;
         const id = parseInt(eventIdInput.value);
+        const cropId = eventForm.getAttribute('data-crop-id');
         events[date].splice(id, 1);
         if (events[date].length === 0) {
             delete events[date];
         }
         localStorage.setItem('calendarEvents', JSON.stringify(events));
+
+        // Eliminar el cultivo del almacenamiento de 'crops'
+        let crops = JSON.parse(localStorage.getItem('crops')) || [];
+        crops = crops.filter(crop => crop.id !== parseInt(cropId));
+        localStorage.setItem('crops', JSON.stringify(crops));
+
         updateCalendar();
         updateEventList(date);
         modal.style.display = 'none';

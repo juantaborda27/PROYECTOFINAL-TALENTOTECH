@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         crops = JSON.parse(localStorage.getItem('crops')) || [];
         console.log('Cultivos cargados:', crops);
         renderCrops();
-        checkForSuggestedCrops(); // Add this line
+        checkForSuggestedCrops(); 
     }
 
     function saveCrops() {
@@ -26,9 +26,19 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Cultivos guardados:', crops);
     }
 
+    function calculateProgress(startDate, endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        const today = new Date();
+        const totalDays = (end - start) / (1000 * 60 * 60 * 24);
+        const daysElapsed = (today - start) / (1000 * 60 * 60 * 24);
+        return Math.min(Math.max(Math.round((daysElapsed / totalDays) * 100), 0), 100);
+    }
+
     function renderCrops() {
         cropsContainer.innerHTML = '';
         crops.forEach(crop => {
+            const progress = calculateProgress(crop.startDate, crop.endDate);
             const cropCard = document.createElement('div');
             cropCard.className = 'habit-card';
             cropCard.innerHTML = `
@@ -36,21 +46,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p>${crop.description}</p>
                 <div class="crop-details">
                     <span>Tipo: ${crop.type}</span>
-                    <br>
-                    <span>Inicio: ${new Date(crop.startDate).toLocaleDateString('es-ES')}</span><br>
-                    <br>
-                    <span>Fin: ${new Date(crop.endDate).toLocaleDateString('es-ES')}</span><br>
-                    <span>Fertilizante: ${crop.fertilizer} kg</span><br>
-                    <br>
-                    <span>Hectáreas: ${crop.hectares}</span><br>
-                    <br>
-                    <span>Plántulas: ${crop.seedlings}</span><br>
-                    <br>
+                    <span>Inicio: ${new Date(crop.startDate).toLocaleDateString('es-ES')}</span>
+                    <span>Fin: ${new Date(crop.endDate).toLocaleDateString('es-ES')}</span>
+                    <span>Fertilizante: ${crop.fertilizer} kg</span>
+                    <span>Hectáreas: ${crop.hectares}</span>
+                    <span>Plántulas: ${crop.seedlings}</span>
                     <span>Cosecha: ${crop.harvest} kg</span>
-                    <br>
                     <span>Producción estimada: ${crop.estimatedProduction} kg</span>
-                    <br>
                 </div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: ${progress}%"></div>
+                </div>
+                <p class="progress-text">${progress}% completado</p>
                 <div class="crop-actions">
                     <button class="icon-button edit-crop"><i data-lucide="edit"></i></button>
                     <button class="icon-button delete-crop"><i data-lucide="trash-2"></i></button>
@@ -181,6 +188,5 @@ document.addEventListener('DOMContentLoaded', function() {
     loadProfilePicture();
 });
 
-// Ejecuta este código en la consola para ver los cultivos actuales
 console.log('Cultivos actuales:', JSON.parse(localStorage.getItem('crops')));
 

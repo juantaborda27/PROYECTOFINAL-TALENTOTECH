@@ -679,3 +679,25 @@ header {
 #confirm-delete:hover {
     background-color: #c80000;
 }
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress {
+    height: 100%;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    text-align: center;
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: var(--text-color);
+}
