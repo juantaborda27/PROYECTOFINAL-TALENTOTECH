@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario Interactivo</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="stylescalendario.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <center><img src="../page/img/LOGO.png" alt="Logo" width="60" height="40" /></center>
+            </div>
+            <nav>
+                <a href="MisHabitos.html"><i data-lucide="home" ></i>Gestión Cultivos</a>
+                <a href="Sugerencias.html"><i data-lucide="lightbulb"></i>Sugerencias de Cultivos</a>
+                <a href="Calendario.html" class="active"><i data-lucide="calendar"></i>Calendario</a>
+            </nav>
+        </aside>
+        <main class="main-container">
+            <header>
+                <button id="menu-toggle" class="icon-button"><i data-lucide="menu"></i></button>
+                <h2>Sugerencias de Hábitos</h2>
+                <div>
+                    <a href="PerfilUsuario.html" class="icon-button profile-picture-container">
+                        <img id="profile-picture" src="path/to/default-profile-picture.jpg" alt="Foto de perfil" class="profile-picture">
+                    </a>
+                </div>
+            </header>
+                
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button id="prevMonth" aria-label="Mes anterior" class="btnCalendar">&lt;</button>
+                    <h2 id="currentMonth"></h2>
+                    <button id="nextMonth" aria-label="Mes siguiente" class="btnCalendar">&gt;</button>
+                </div>
+                <div id="calendar"></div>
+            </div>
+        
+            <div id="eventModal" role="dialog" aria-labelledby="modalTitle">
+                <div class="modal-content">
+                    <span class="close" aria-label="Cerrar">&times;</span>
+                    <center><h2 id="modalTitle">Eventos del día</h2></center>
+                    <div id="eventList"></div>
+                    <button id="addEventButton">Añadir Nuevo Evento</button>
+                    <form id="eventForm" style="display: none;">
+                        <input type="hidden" id="eventDate">
+                        <input type="hidden" id="eventId">
+                        <div class="form-group">
+                            <label for="eventTitle">Título del evento:</label>
+                            <input type="text" id="eventTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="eventDescription">Descripción:</label>
+                            <textarea id="eventDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="eventTime">Hora:</label>
+                            <input type="time" id="eventTime" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="eventFrequency">Frecuencia:</label>
+                            <select id="eventFrequency" required>
+                                <option value="once">Una vez</option>
+                                <option value="daily">Diario</option>
+                                <option value="weekly">Semanal</option>
+                                <option value="monthly">Mensual</option>
+                                <option value="yearly">Anual</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="eventRepeatDays">Días de repetición:</label>
+                            <input type="number" id="eventRepeatDays" min="1" value="1">
+                        </div>
+                        <!-- <div class="form-group">
+                            <label for="habit-category">Categoría:</label>
+                            <select id="habit-category" required>
+                                <option value="">Selecciona una categoría</option>
+                            </select>
+                        </div> -->
+                        <div class="form-group">
+                            <label for="eventReminder">
+                                <input type="checkbox" id="eventReminder">
+                                Activar recordatorio
+                            </label>
+                        </div>
+                        <div class="form-actions">
+                            <button type="click" id="saveButton">Guardar</button>
+                            <button type="button" id="deleteButton" class="delete">Eliminar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="CalendarioLogica.js"></script>
+</body>
+</html>

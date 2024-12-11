@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habits UP - Mejora tus hábitos</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="/" class="logo-link">
+                    <img src="../page/img/LOGO.png" alt="Habits UP Logo" class="logo">
+                </a>
+                <a href="acercade.html" class="nav-link">Acerca de</a>
+                <a href="/features" class="nav-link">Características</a>
+            </div>
+            <div class="nav-right">
+                <button class="btn btn-ghost" onclick="toggleModal(true, true)" id="bt1">Iniciar sesión</button>
+                <button class="btn btn-primary" onclick="toggleModal(true, false)" id="bt2">Registrarse</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Carrusel de fondo -->
+    <div class="carousel">
+        <div class="carousel-slides">
+            <div class="carousel-slide active">
+                <img src="https://images.pexels.com/photos/25596778/pexels-photo-25596778/free-photo-of-mujer-deporte-joven-fitnes.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Slide 1">
+            </div>
+            <div class="carousel-slide">
+                <img src="https://images.pexels.com/photos/26756092/pexels-photo-26756092/free-photo-of-mujer-relajacion-sentado-libro.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Slide 2">
+            </div>
+            <div class="carousel-slide">
+                <img src="https://images.pexels.com/photos/10483713/pexels-photo-10483713.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Slide 3">
+            </div>
+            <div class="carousel-slide">
+                <img src="https://images.pexels.com/photos/8899511/pexels-photo-8899511.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Slide 4">
+            </div>
+            <div class="carousel-slide">
+                <img src="https://images.pexels.com/photos/10059098/pexels-photo-10059098.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Slide 5">
+            </div>
+            <div class="carousel-slide">
+                <img src="https://images.pexels.com/photos/9432637/pexels-photo-9432637.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Slide 6">
+            </div>
+        </div>
+        <!-- <button class="carousel-control prev" onclick="prevSlide()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <button class="carousel-control next" onclick="nextSlide()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button> -->
+    </div>
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <div class="hero-content">
+            <!-- <h1 id="title">Mejora tus hábitos</h1> -->
+            <div id="typingText" class="typing-container"></div>
+            <p>Desarrolla hábitos positivos y alcanza tus metas con Habits UP</p>
+            <p>Embárcate en un viaje transformador hacia 
+                una vida más saludable con nuestra aplicación. 
+                Construye, sigue y celebra hábitos que mejoren 
+                tu bienestar día a día, convirtiendo pequeños cambios en grandes logros.</p>
+            <button class="btn btn-primary btn-lg" onclick="toggleModal(true, false)" id="bt3">
+                Comienza ahora
+            </button>
+        </div>
+        <div>
+
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="toggleModal(false)" id="bt4">×</button>
+            <div class="modal-header">
+                <h2 id="modalTitle">Iniciar sesión</h2>
+                <p id="modalDescription">Ingresa a tu cuenta para continuar</p>
+            </div>
+            <form id="authForm" class="modal-form">
+                <div class="form-group">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email" placeholder="tu@ejemplo.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="form-group birthdate-group" style="display: none;">
+                    <label for="birthdate">Fecha de nacimiento</label>
+                    <input type="date" id="birthdate">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <span id="submitButtonText">Iniciar sesión</span>
+                </button>
+                <p class="text-center">
+                    <span id="toggleText">¿No tienes cuenta?</span>
+                    <button type="button" class="link-button" onclick="toggleAuthMode()">
+                        <span id="toggleButtonText">Regístrate</span>
+                    </button>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sugerencias de Hábitos Saludables</title>
+    <link rel="stylesheet" href="Sugerencias.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <center><img src="../page/img/LOGO.png" alt="" width="60px" height="40px"></center>
+            </div>
+            <nav>
+                <a href="MisHabitos.html"><i data-lucide="home" ></i>Gestión Cultivos</a>
+                <a href="Sugerencias.html" class="active"><i data-lucide="lightbulb"></i>Sugerencias de Cultivos</a>
+                <a href="Calendario.html"><i data-lucide="calendar"></i>Calendario</a>
+            </nav>
+        </aside>
+        <main class="main-container">
+            <header>
+                <button id="menu-toggle" class="icon-button"><i data-lucide="menu"></i></button>
+                <h2>Sugerencias de Hábitos</h2>
+                <div>
+                    <a href="PerfilUsuario.html" class="icon-button profile-picture-container">
+                        <img id="profile-picture" src="path/to/default-profile-picture.jpg" alt="Foto de perfil" class="profile-picture">
+                    </a>
+                </div>
+            </header>
+            <div class="content">
+                <div id="suggestions-container" class="suggestions-container">
+                    <b><p class="suggestions-description">Aquí tienes algunos hábitos que podrías querer añadir a tu rutina diaria para mejorar, recuerda actualizar el habito al numero de dias que quieres que se repita!!</b>
+                    
+                    <div id="category-filters" class="category-filters"></div>
+                    <div id="suggestions-grid" class="suggestions-grid"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="notification" class="notification" style="display: none;"></div>
+    
+
+    <script src="Sugerencias.js"></script>
+</body>
+</html>
