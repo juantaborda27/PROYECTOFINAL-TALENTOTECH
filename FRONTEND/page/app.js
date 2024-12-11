@@ -118,7 +118,7 @@ document.querySelectorAll('.carousel-control').forEach(control => {
 
 
 
-const text = "Mejora tus hábitos"; // El texto a mostrar
+const text = "Mejora tu agro"; // El texto a mostrar
     const duration = 200; // Duración entre cada carácter (en milisegundos)
     let i = 0;
 
