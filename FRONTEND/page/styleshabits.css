@@ -12,6 +12,10 @@
     --border-color: #729762;
 }
 
+.main-container h2{
+    font-size: 40px;
+}
+
 body {
     font-family: 'Montserrat', sans-serif;
     margin: 0;
@@ -66,6 +70,10 @@ h2 {
     transition: background-color 0.3s;
 }
 
+.sidebar a{
+    font-size: 22px;
+}
+
 .sidebar nav a:hover,
 .sidebar nav a.active {
     background-color: var(--primary-color);
@@ -111,7 +119,7 @@ header {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 250px;
+    min-height: 350px;
 }
 
 .habit-card:hover{
@@ -678,4 +686,26 @@ header {
 
 #confirm-delete:hover {
     background-color: #c80000;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress {
+    height: 100%;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    text-align: center;
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: var(--text-color);
 }

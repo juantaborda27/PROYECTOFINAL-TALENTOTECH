@@ -9,13 +9,17 @@ document.addEventListener('DOMContentLoaded', function(){
     const eventList = document.getElementById('eventList');
     const addEventButton = document.getElementById('addEventButton');
     const eventDateInput = document.getElementById('eventDate');
-    const eventTitleInput = document.getElementById('eventTitle');
+    const cropNameInput = document.getElementById('cropName');
     const eventIdInput = document.getElementById('eventId');
-    const eventDescriptionInput = document.getElementById('eventDescription');
-    const eventTimeInput = document.getElementById('eventTime');
-    const eventFrequencyInput = document.getElementById('eventFrequency');
-    const eventReminderInput = document.getElementById('eventReminder');
-    const eventRepeatDaysInput = document.getElementById('eventRepeatDays');
+    const cropDescriptionInput = document.getElementById('cropDescription');
+    const cropTypeInput = document.getElementById('cropType');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+    const fertilizerInput = document.getElementById('fertilizer');
+    const hectaresInput = document.getElementById('hectares');
+    const seedlingsInput = document.getElementById('seedlings');
+    const harvestInput = document.getElementById('harvest');
+    const estimatedProductionInput = document.getElementById('estimatedProduction');
     const saveButton = document.getElementById('saveButton');
     const deleteButton = document.getElementById('deleteButton');
     const prevMonthBtn = document.getElementById('prevMonth');
@@ -70,7 +74,6 @@ document.addEventListener('DOMContentLoaded', function(){
         }
 
         updateCalendar();
-        syncCalendarWithHabits();
     }
 
     function updateCalendar() {
@@ -96,6 +99,7 @@ document.addEventListener('DOMContentLoaded', function(){
     function openModal(e) {
         const date = e.target.getAttribute('data-date');
         eventDateInput.value = date;
+        startDateInput.value = date; // Set the start date to the clicked date
         updateEventList(date);
         modal.style.display = 'block';
     }
@@ -106,12 +110,12 @@ document.addEventListener('DOMContentLoaded', function(){
             events[date].forEach((event, index) => {
                 const eventItem = document.createElement('div');
                 eventItem.className = 'event-item';
-                eventItem.textContent = event.title;
+                eventItem.textContent = event.name;
                 eventItem.addEventListener('click', () => editEvent(date, index));
                 eventList.appendChild(eventItem);
             });
         } else {
-            eventList.innerHTML = '<p>No hay eventos para este día.</p>';
+            eventList.innerHTML = '<p>No hay cultivos para este día.</p>';
         }
         eventForm.style.display = 'none';
         addEventButton.style.display = 'block';
@@ -120,87 +124,41 @@ document.addEventListener('DOMContentLoaded', function(){
     function editEvent(date, index) {
         const event = events[date][index];
         eventIdInput.value = index;
-        eventTitleInput.value = event.title;
-        eventDescriptionInput.value = event.description || '';
-        eventTimeInput.value = event.time || '';
-        eventFrequencyInput.value = event.frequency || 'once';
-        eventReminderInput.checked = event.reminder || false;
-        eventRepeatDaysInput.value = event.repeatDays || 1;
+        cropNameInput.value = event.name;
+        cropDescriptionInput.value = event.description || '';
+        cropTypeInput.value = event.type || '';
+        startDateInput.value = event.startDate || '';
+        endDateInput.value = event.endDate || '';
+        fertilizerInput.value = event.fertilizer || '';
+        hectaresInput.value = event.hectares || '';
+        seedlingsInput.value = event.seedlings || '';
+        harvestInput.value = event.harvest || '';
+        estimatedProductionInput.value = event.estimatedProduction || '';
         eventForm.style.display = 'block';
         addEventButton.style.display = 'none';
         deleteButton.style.display = 'block';
+
+        // Guardar el ID del cultivo para actualizarlo más tarde
+        eventForm.setAttribute('data-crop-id', event.id);
     }
 
-    function saveEvent(date, title, description, time, frequency, reminder) {
+    function saveCrop(date, cropData) {
         if (!events[date]) {
             events[date] = [];
         }
-        const newEvent = { title, description, time, frequency, reminder };
-        events[date].push(newEvent);
+        events[date].push(cropData);
         localStorage.setItem('calendarEvents', JSON.stringify(events));
-        // Agregar el evento como un hábito en MisHabitos
-        addEventToHabits(newEvent);
+
+        // Guardar el cultivo en el almacenamiento de 'crops'
+        let crops = JSON.parse(localStorage.getItem('crops')) || [];
+        crops.push({
+            id: Date.now(),
+            ...cropData
+        });
+        localStorage.setItem('crops', JSON.stringify(crops));
+
         updateCalendar();
         updateEventList(date);
-    }
-
-    function addEventToHabits(event) {
-        let habits = JSON.parse(localStorage.getItem('habits')) || [];
-        const newHabit = {
-            id: Date.now(),
-            name: event.title,
-            description: event.description,
-            time: event.time,
-            frequency: event.frequency,
-            reminder: event.reminder,
-            streak: 0,
-            progress: 0,
-            completed: false,
-            lastCompletedDate: null,
-            fechaCreacion: new Date().toISOString()
-        };
-        habits.push(newHabit);
-        localStorage.setItem('habits', JSON.stringify(habits));
-    }
-
-    function syncCalendarWithHabits() {
-        let habits = JSON.parse(localStorage.getItem('habits')) || [];
-        const calendarEvents = JSON.parse(localStorage.getItem('calendarEvents')) || {};
-
-        // Crear un mapa de hábitos existentes por nombre para una búsqueda rápida
-        const habitMap = new Map(habits.map(habit => [habit.name, habit]));
-
-        // Iterar sobre todos los eventos del calendario
-        Object.entries(calendarEvents).forEach(([date, dateEvents]) => {
-            dateEvents.forEach(event => {
-                if (!habitMap.has(event.title)) {
-                    // Si el hábito no existe, créalo
-                    const newHabit = {
-                        id: Date.now() + Math.random(), // Asegura un ID único
-                        name: event.title,
-                        description: event.description,
-                        time: event.time,
-                        frequency: event.frequency,
-                        reminder: event.reminder,
-                        repeatDays: event.repeatDays,
-                        streak: 0,
-                        progress: 0,
-                        completed: false,
-                        lastCompletedDate: null,
-                        fechaCreacion: new Date().toISOString()
-                    };
-                    habits.push(newHabit);
-                    habitMap.set(event.title, newHabit);
-                }
-            });
-        });
-
-        // Guardar los hábitos actualizados
-        localStorage.setItem('habits', JSON.stringify(habits));
-        console.log('Hábitos sincronizados:', habits);
-
-        // Actualizar la interfaz de usuario de "Mis Hábitos"
-        // updateHabitsUI(habits);
     }
 
 
@@ -229,37 +187,64 @@ document.addEventListener('DOMContentLoaded', function(){
     saveButton.addEventListener('click', function(e) {
         e.preventDefault();
         const date = eventDateInput.value;
-        const title = eventTitleInput.value;
-        const description = eventDescriptionInput.value;
-        const time = eventTimeInput.value;
-        const frequency = eventFrequencyInput.value;
-        const reminder = eventReminderInput.checked;
+        const cropData = {
+            id: eventForm.getAttribute('data-crop-id') || Date.now(),
+            name: cropNameInput.value,
+            description: cropDescriptionInput.value,
+            type: cropTypeInput.value,
+            startDate: startDateInput.value,
+            endDate: endDateInput.value,
+            fertilizer: parseFloat(fertilizerInput.value),
+            hectares: parseFloat(hectaresInput.value),
+            seedlings: parseInt(seedlingsInput.value),
+            harvest: parseFloat(harvestInput.value),
+            estimatedProduction: parseFloat(estimatedProductionInput.value)
+        };
+
         const id = eventIdInput.value;
         if (id === '') {
-            saveEvent(date, title, description, time, frequency, reminder);
+            saveCrop(date, cropData);
         } else {
-            // Actualizar evento existente
-            events[date][parseInt(id)] = { title, description, time, frequency, reminder };
+            // Update existing crop
+            events[date][parseInt(id)] = cropData;
             localStorage.setItem('calendarEvents', JSON.stringify(events));
+
+            // Update crop in 'crops' storage
+            let crops = JSON.parse(localStorage.getItem('crops')) || [];
+            const cropIndex = crops.findIndex(crop => crop.id === cropData.id);
+            if (cropIndex !== -1) {
+                crops[cropIndex] = cropData;
+            } else {
+                crops.push(cropData);
+            }
+            localStorage.setItem('crops', JSON.stringify(crops));
+
             updateCalendar();
             updateEventList(date);
         }
         modal.style.display = 'none';
-        console.log('Evento guardado:', { title, description, time, frequency, reminder });
+        console.log('Cultivo guardado:', cropData);
     });
 
     deleteButton.onclick = function() {
         const date = eventDateInput.value;
         const id = parseInt(eventIdInput.value);
+        const cropId = eventForm.getAttribute('data-crop-id');
         events[date].splice(id, 1);
         if (events[date].length === 0) {
             delete events[date];
         }
         localStorage.setItem('calendarEvents', JSON.stringify(events));
+
+        // Eliminar el cultivo del almacenamiento de 'crops'
+        let crops = JSON.parse(localStorage.getItem('crops')) || [];
+        crops = crops.filter(crop => crop.id !== parseInt(cropId));
+        localStorage.setItem('crops', JSON.stringify(crops));
+
         updateCalendar();
         updateEventList(date);
-        syncCalendarWithHabits();
         modal.style.display = 'none';
+        showNotification('Cultivo eliminado con éxito');
     }
 
     prevMonthBtn.onclick = function() {
@@ -273,16 +258,12 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
     createCalendar();
-    syncCalendarWithHabits();
-
 
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.querySelector('.sidebar');
     menuToggle.addEventListener('click', function() {
         sidebar.classList.toggle('show-sidebar');
     });
-
-    
 
     function loadProfilePicture() {
         const profilePicture = localStorage.getItem('profilePicture');
@@ -295,4 +276,18 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
     loadProfilePicture();
+
+    function showNotification(message) {
+        const notification = document.getElementById('notification');
+        if (notification) {
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        } else {
+            console.log(message);
+        }
+    }
 });
+

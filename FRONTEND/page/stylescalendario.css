@@ -1,15 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nerko+One&family=Montserrat&display=swap');
 
 :root {
-    --primary-color: #3A1078;
-    --danger-color: #e74c3c;
+    --primary-color: #006A67;
+    --danger-color: #E7F0DC;
     --success-color: #2ecc71;
     --warning-color: #f39c12;
     --info-color: #9b59b6;
-    --background-color: #f5f5f5;
+    --background-color: #E7F0DC;
     --card-background: #ffffff;
     --text-color: #333333;
-    --border-color: #e0e0e0;
+    --border-color: #729762;
+}
+
+.main-container h2{
+    font-size: 40px;
+}
+
+.sidebar a{
+    font-size: 22px;
 }
 
 body {
@@ -116,7 +124,7 @@ header {
 
 .calendar-container {
     background-color: var(--card-background);
-    padding: 20px;
+    padding: 50px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
@@ -154,7 +162,7 @@ header {
     background-color: var(--card-background);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    padding: 90px;
 }
 
 .habit-card h3 {
@@ -221,13 +229,14 @@ header {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
-    padding: 5px;
     overflow: hidden;
     padding: 2.5em;
 }
 
 .day:hover {
     background-color: #bda6cf;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .day.has-event {
@@ -241,12 +250,13 @@ header {
 .weekday {
     font-weight: bold;
     text-align: center;
-    padding: 20px 0;
+    padding: 0px 0;
     letter-spacing: 0.3em;
 }
 
 .other-month {
     opacity: 0.5;
+    padding: 30px;
 }
 
 .event-indicator {
@@ -268,9 +278,13 @@ header {
     background-color: rgba(0,0,0,0.4);
 }
 
+#eventModal input{
+    width: 100%;
+}
+
 .modal-content {
     background-color: #fefefe;
-    margin: 10% auto;
+    margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 300px;

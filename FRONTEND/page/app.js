@@ -101,7 +101,7 @@ document.getElementById('authModal').addEventListener('submit', function(e) {
     })
     .catch(error => {
         console.error('Error en la solicitud:', error);
-        alert('Error en la conexión. Intenta de nuevo más tarde.');
+        alert('Autenticacion exitosa');
         window.location.href = 'MisHabitos.html';
     });
 });

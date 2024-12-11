@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         crops = JSON.parse(localStorage.getItem('crops')) || [];
         console.log('Cultivos cargados:', crops);
         renderCrops();
-        checkForSuggestedCrops(); // Add this line
+        checkForSuggestedCrops(); 
     }
 
     function saveCrops() {
@@ -26,16 +26,45 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Cultivos guardados:', crops);
     }
 
+    function calculateProgress(startDate, endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        const today = new Date();
+        const totalDays = (end - start) / (1000 * 60 * 60 * 24);
+        const daysElapsed = (today - start) / (1000 * 60 * 60 * 24);
+        return Math.min(Math.max(Math.round((daysElapsed / totalDays) * 100), 0), 100);
+    }
+
+    function calculateCropCycles(startDate, endDate) {
+        const start = new Date(startDate);
+        const today = new Date();
+        const cycleDuration = (new Date(endDate) - start) / (1000 * 60 * 60 * 24); // Duration of one cycle in days
+        const daysSinceStart = (today - start) / (1000 * 60 * 60 * 24);
+        return Math.floor(daysSinceStart / cycleDuration);
+    }
+
     function renderCrops() {
         cropsContainer.innerHTML = '';
         crops.forEach(crop => {
+            const progress = calculateProgress(crop.startDate, crop.endDate);
+            const cycles = calculateCropCycles(crop.startDate, crop.endDate);
             const cropCard = document.createElement('div');
             cropCard.className = 'habit-card';
+            
+            let progressColor;
+            if (progress === 100) {
+                progressColor = '#2ecc71'; // Green for 100% completion
+            } else if (progress >= 50) {
+                progressColor = '#f39c12'; // Orange for 50% or more
+            } else {
+                progressColor = '#3498db'; // Blue for less than 50%
+            }
+            
             cropCard.innerHTML = `
                 <h3>${crop.name}</h3>
                 <p>${crop.description}</p>
                 <div class="crop-details">
-                    <span>Tipo: ${crop.type}</span>
+                    <span>Tipo: ${crop.type}</span><br>
                     <span>Inicio: ${new Date(crop.startDate).toLocaleDateString('es-ES')}</span><br>
                     <span>Fin: ${new Date(crop.endDate).toLocaleDateString('es-ES')}</span><br>
                     <span>Fertilizante: ${crop.fertilizer} kg</span><br>
@@ -43,7 +72,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     <span>Plántulas: ${crop.seedlings}</span><br>
                     <span>Cosecha: ${crop.harvest} kg</span>
                     <span>Producción estimada: ${crop.estimatedProduction} kg</span>
+                    <span>Ciclos completados: ${cycles}</span>
                 </div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: ${progress}%; background-color: ${progressColor};"></div>
+                </div>
+                <p class="progress-text">${progress}% completado</p>
                 <div class="crop-actions">
                     <button class="icon-button edit-crop"><i data-lucide="edit"></i></button>
                     <button class="icon-button delete-crop"><i data-lucide="trash-2"></i></button>
@@ -135,8 +169,20 @@ document.addEventListener('DOMContentLoaded', function() {
     cancelCropBtn.addEventListener('click', hideModal);
 
     confirmDeleteBtn.addEventListener('click', function() {
+        const cropToDelete = crops.find(c => c.id === deletingCropId);
         crops = crops.filter(c => c.id !== deletingCropId);
         saveCrops();
+    
+        // Eliminar el cultivo del calendario
+        let calendarEvents = JSON.parse(localStorage.getItem('calendarEvents')) || {};
+        for (let date in calendarEvents) {
+            calendarEvents[date] = calendarEvents[date].filter(event => event.id !== deletingCropId);
+            if (calendarEvents[date].length === 0) {
+                delete calendarEvents[date];
+            }
+        }
+        localStorage.setItem('calendarEvents', JSON.stringify(calendarEvents));
+    
         renderCrops();
         confirmDialog.style.display = 'none';
         showNotification('Cultivo eliminado con éxito');
@@ -174,6 +220,5 @@ document.addEventListener('DOMContentLoaded', function() {
     loadProfilePicture();
 });
 
-// Ejecuta este código en la consola para ver los cultivos actuales
 console.log('Cultivos actuales:', JSON.parse(localStorage.getItem('crops')));
 
