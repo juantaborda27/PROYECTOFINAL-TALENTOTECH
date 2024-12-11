@@ -36,10 +36,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function calculateCropCycles(startDate, endDate) {
-         const start = new Date(startDate);
-         const today = new Date();
-         const cycleDuration = (new Date(endDate) - start) / (1000 * 60 * 60 * 24);
-         const daysSinceStart = (today - start) / (1000 * 60 * 60 * 24);
+        const start = new Date(startDate);
+        const today = new Date();
+        const cycleDuration = (new Date(endDate) - start) / (1000 * 60 * 60 * 24); // Duration of one cycle in days
+        const daysSinceStart = (today - start) / (1000 * 60 * 60 * 24);
         return Math.floor(daysSinceStart / cycleDuration);
     }
 
@@ -70,8 +70,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <span>Fertilizante: ${crop.fertilizer} kg</span><br>
                     <span>Hectáreas: ${crop.hectares}</span><br>
                     <span>Plántulas: ${crop.seedlings}</span><br>
-                    <span>Cosecha: ${crop.harvest} kg</span><br>
-                    <span>Producción estimada: ${crop.estimatedProduction} kg</span><br>
+                    <span>Cosecha: ${crop.harvest} kg</span>
+                    <span>Producción estimada: ${crop.estimatedProduction} kg</span>
                     <span>Ciclos completados: ${cycles}</span>
                 </div>
                 <div class="progress-bar">
@@ -169,8 +169,20 @@ document.addEventListener('DOMContentLoaded', function() {
     cancelCropBtn.addEventListener('click', hideModal);
 
     confirmDeleteBtn.addEventListener('click', function() {
+        const cropToDelete = crops.find(c => c.id === deletingCropId);
         crops = crops.filter(c => c.id !== deletingCropId);
         saveCrops();
+    
+        // Eliminar el cultivo del calendario
+        let calendarEvents = JSON.parse(localStorage.getItem('calendarEvents')) || {};
+        for (let date in calendarEvents) {
+            calendarEvents[date] = calendarEvents[date].filter(event => event.id !== deletingCropId);
+            if (calendarEvents[date].length === 0) {
+                delete calendarEvents[date];
+            }
+        }
+        localStorage.setItem('calendarEvents', JSON.stringify(calendarEvents));
+    
         renderCrops();
         confirmDialog.style.display = 'none';
         showNotification('Cultivo eliminado con éxito');

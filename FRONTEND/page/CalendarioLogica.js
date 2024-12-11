@@ -244,6 +244,7 @@ document.addEventListener('DOMContentLoaded', function(){
         updateCalendar();
         updateEventList(date);
         modal.style.display = 'none';
+        showNotification('Cultivo eliminado con éxito');
     }
 
     prevMonthBtn.onclick = function() {
@@ -275,5 +276,18 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
     loadProfilePicture();
+
+    function showNotification(message) {
+        const notification = document.getElementById('notification');
+        if (notification) {
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        } else {
+            console.log(message);
+        }
+    }
 });
 
