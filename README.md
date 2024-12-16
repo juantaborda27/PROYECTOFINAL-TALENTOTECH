@@ -42,7 +42,7 @@ El proyecto está desarrollado utilizando **HTML**, **CSS** y **JavaScript**, pr
    git clone https://github.com/juantaborda27/PROYECTOFINAL-TALENTOTECH.git
 
 
-# Juan Humberto Taborda Acosta 
-# Libni Jahzeel Torres Castro
-# Samuel David Pérez Rodríguez
-# Dharla José Durán Riobo
+## Juan Humberto Taborda Acosta 
+## Libni Jahzeel Torres Castro
+## Samuel David Pérez Rodríguez
+## Dharla José Durán Riobo
