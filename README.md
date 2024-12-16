@@ -46,3 +46,5 @@ El proyecto está desarrollado utilizando **HTML**, **CSS** y **JavaScript**, pr
 ## Libni Jahzeel Torres Castro
 ## Samuel David Pérez Rodríguez
 ## Dharla José Durán Riobo
+
+Para abrir el proyecto correctamente por favor, descargar el zip, descomprimir y posteriormente ejecutar en el navegador el index.html 
